@@ -10,6 +10,7 @@ end
 require "minitest/autorun"
 require "minitest/spec"
 require "minitest/stub_const"
+require "pry"
 
 $LOAD_PATH.unshift "lib"
 require "fog/core"

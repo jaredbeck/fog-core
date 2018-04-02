@@ -21,11 +21,20 @@ module Fog
       Fog.services[new_service] ||= []
       Fog.services[new_service] |= [to_s.split("::").last.downcase.to_sym]
       @services_registry ||= {}
-      @services_registry[new_service] = [to_s, constant_string].join("::")
+      @services_registry[new_service] = service_klass(constant_string)
     end
 
     def services
       @services_registry.keys
+    end
+
+    def service_klass(constant_string)
+      eval([to_s, constant_string].join("::"))
+      [to_s, constant_string].join("::")
+    rescue NameError
+      Fog::Logger.deprecation('Prefer to define all Services within the Provider Namespace instead!')
+      provider = to_s.split("::").last
+      ['Fog', constant_string, provider].join("::")
     end
   end
 end
